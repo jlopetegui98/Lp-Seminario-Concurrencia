@@ -70,14 +70,14 @@ func (phil *Philosopher) getForks() {
 
 }
 
-func (phil *Philosopher) goDine() {
+func (phil *Philosopher) goDine(end chan string) {
 	phil.sayHi()
 	phil.think()
 	fmt.Println("Dejo de pensar")
 	phil.getForks()
 	phil.eat()
 	phil.dropForks()
-	defer wg.Done()
+	end <- phil.name
 }
 
 func main() {
@@ -99,10 +99,13 @@ func main() {
 		_phil := &Philosopher{name, forks[i], forks[(i+1)%8]}
 		philosophers[i] = *_phil
 	}
+	end := make(chan string, 1)
 	for i := range names {
-		go philosophers[i].goDine()
-		wg.Add(1)
+		go philosophers[i].goDine(end)
 	}
-	wg.Wait()
+	for i := range names {
+		name := <-end
+		fmt.Printf("%s fue el filósofo número %d en terminar de comer...\n", name, i+1)
+	}
 	fmt.Println("Se acabó la cena...")
 }
