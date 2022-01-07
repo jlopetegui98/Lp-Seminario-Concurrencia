@@ -1,6 +1,7 @@
 ﻿using MySemaphore;
 using MyBarrier;
 using MyCountDown;
+using MonitorExample;
 
 public class Program{
     public static void Main(string[] args){
@@ -12,6 +13,8 @@ public class Program{
             BarrierExample.MainExample();
         else if(args[0] == "Countdown")
             CountdownExample.MainExample();
+        else if(args[0] == "Monitor")
+            MonExample.MainExample();
         else
         {
             throw new Exception("Invalid Argument.");
